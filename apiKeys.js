@@ -41,7 +41,7 @@ const apiKeys = {
     lastAccessDate: "2024-11-20",
   },
   "J48-Mamiya": {
-    expiryDate: "unli",
+    expiryDate: parseCustomDate("21/11/2024/18:15"),
     remainingRequests: 50,
     maxRequests: 50,
     lastAccessDate: "2024-11-20",

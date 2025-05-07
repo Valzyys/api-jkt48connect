@@ -644,5 +644,12 @@ const apiKeys = {
     lastAccessDate: "2025-05-02",
     premium: true
   },
+
+  "JC-H1002A": {
+    expiryDate: "unli",
+    remainingRequests: 30,
+    maxRequests: 30,
+    lastAccessDate: "2025-05-07"
+  },
 };
 module.exports = apiKeys;

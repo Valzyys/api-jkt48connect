@@ -1,3 +1,4 @@
+
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
@@ -35,7 +36,7 @@ async function getLiveStream(channelId) {
       }
     );
 
-    if (!response.data.items.length) return null;
+    if (!response.data.items || response.data.items.length === 0) return null;
 
     const video = response.data.items[0];
     const videoId = video.id.videoId;
@@ -87,15 +88,21 @@ async function getLiveStream(channelId) {
 router.get("/", validateApiKey, async (req, res) => {
   try {
     const livePromises = CHANNEL_IDS.map(id => getLiveStream(id));
-    const results = await Promise.all(livePromises);
-
-    // Filter hanya yang benar-benar sedang live
-    const liveStreams = results.filter(Boolean);
-
+    
+    // Handle possible Promise rejections
+    const results = await Promise.allSettled(livePromises);
+    
+    // Filter only successful results and non-null values
+    const liveStreams = results
+      .filter(result => result.status === 'fulfilled' && result.value !== null)
+      .map(result => result.value);
+    
+    // Return empty array if no live streams found
     res.json(liveStreams);
   } catch (error) {
     console.error("Error fetching live streams:", error.message);
-    res.status(500).json([]);
+    // Return empty array on error
+    res.status(500).json([Error]);
   }
 });
 
